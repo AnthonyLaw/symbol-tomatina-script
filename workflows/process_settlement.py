@@ -16,6 +16,7 @@ async def main():
 	parser.add_argument('--network', help='NEM and Symbol network', choices=['testnet', 'mainnet'], default='mainnet')
 	parser.add_argument('--order-address', help='address receive order transaction')
 	parser.add_argument('--private-key', help='private key of the account to use for NFT creation')
+	parser.add_argument('--order-file', help='path to save order file', default='data/order.json')
 	parser.add_argument('--dry-run', help='print transactions without sending', action='store_true')
 
 	args = parser.parse_args()
@@ -30,7 +31,7 @@ async def main():
 
 	print('processing settlement')
 
-	order_manager = OrderManager('data/order.json')
+	order_manager = OrderManager(args.order_file)
 
 	pending = order_manager.get_pending_settlement_orders()
 

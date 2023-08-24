@@ -19,6 +19,9 @@ async def main():
 	parser.add_argument('--network', help='NEM and Symbol network', choices=['testnet', 'mainnet'], default='mainnet')
 	parser.add_argument('--order-address', help='address receive order transaction')
 	parser.add_argument('--private-key', help='private key of the account to use for NFT creation')
+	parser.add_argument('--check-point-file', help='check point file', default='data/last_check_point.json')
+	parser.add_argument('--order-file', help='order file', default='data/order.json')
+	parser.add_argument('--art-generated-path', help='path to save image file', default='art_generated')
 	parser.add_argument('--dry-run', help='print transactions without sending', action='store_true')
 
 	args = parser.parse_args()
@@ -38,7 +41,7 @@ async def main():
 	native_mosaic_id = hex(currency_mosaic_id)[2:].upper()
 	order_payment = 70000000
 
-	check_point = CheckPoint('data/last_check_point.json')
+	check_point = CheckPoint(args.check_point_file)
 	last_check_point = check_point.get_last_check_point()
 
 	if not last_check_point:
@@ -76,8 +79,9 @@ async def main():
 	network_time =  await client.node_time()
 	network_time = network_time.add_hours(2)
 
+	order_manager = OrderManager(args.order_file)
+
 	for order in orders:
-		order_manager = OrderManager('data/order.json')
 		tomato_process = TomatoProcess(client, args.network, key_pair)
 
 		numbers_list = [int(x)+1 for x in order[0].split(',')]
@@ -94,7 +98,7 @@ async def main():
 		stem = f'art_source/stem/stem-{numbers_list[5]}.png'
 
 		# generate image name: 1_1_1_1_1_1.png
-		output_filename = 'art_generated/' + order[0].replace(',', '_') + '.png'
+		output_filename = f'{args.art_generated_path}' + '/' +order[0].replace(',', '_') + '.png'
 
 		generate_images_nft([
 			feet,
