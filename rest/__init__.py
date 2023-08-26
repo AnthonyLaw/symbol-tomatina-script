@@ -3,7 +3,7 @@ import os
 import json
 
 IMAGES_FOLDER = os.environ.get('IMAGES_FOLDER', '/art_generated')
-Order_FILE = os.environ.get('ORDER_FILE', '/data/order.json')
+Order_FILE = os.environ.get('ORDER_FILE', 'data/order.json')
 
 def create_app():
 	app = Flask(__name__)
@@ -28,6 +28,28 @@ def setup_routes(app):
 			order['image'] = f"{url_root}images/{art_png}"
 
 		return jsonify(orders)
+
+	@app.route('/api/mosaics', methods=['GET'])
+	def get_mosaics():
+		url_root = request.url_root
+
+		with open(Order_FILE) as order_file:
+			orders = json.load(order_file)
+
+		mosaics = []
+
+		for order in orders:
+			if order["order_status"] == 'completed':
+				art_png = order['message'].replace(',', '_') + '.png'
+				mosaics.append({
+					"image": f"{url_root}images/{art_png}",
+					"mosaic_id": order['mosaic_id'],
+					"order_id": order['order_id'],
+					"buyer_address": order['buyer_address'],
+					"image_container_hash": order['image_container_hash'],
+				})
+
+		return jsonify(mosaics)
 
 	@app.route('/images/<filename>', methods=['GET'])
 	def get_image(filename):
