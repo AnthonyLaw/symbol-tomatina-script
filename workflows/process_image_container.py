@@ -81,7 +81,7 @@ async def main():
 			'parser': 'generic',
 			'mime': 'image/png',
 			'userData': {
-				'mosaicId': order_info['mosaic_id']
+				'mosaicId': order_info['mosaic_id'].replace('0x', '').upper(),
 			}
 		}
 

@@ -43,7 +43,7 @@ def setup_routes(app):
 				art_png = order['message'].replace(',', '_') + '.png'
 				mosaics.append({
 					"image": f"{url_root}images/{art_png}",
-					"mosaic_id": order['mosaic_id'],
+					"mosaic_id": order['mosaic_id'].replace('0x', '').upper(),
 					"order_id": order['order_id'],
 					"buyer_address": order['buyer_address'],
 					"image_container_hash": order['image_container_hash'],
