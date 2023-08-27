@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request, send_from_directory
+from flask_cors import CORS
 import os
 import json
 
@@ -7,6 +8,8 @@ Order_FILE = os.environ.get('ORDER_FILE', 'data/order.json')
 
 def create_app():
 	app = Flask(__name__)
+
+	CORS(app)
 
 	setup_error_handlers(app)
 
