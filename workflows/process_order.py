@@ -53,9 +53,11 @@ async def main():
 		print('No new order')
 		return
 
-	print(f'found {len(transactions)} new order')
+	print(f'found {len(transactions)} transactions')
 
 	orders = []
+
+	print(f'found {len(orders)} orders')
 
 	for transaction in transactions:
 		if 'message' not in transaction['transaction']:
