@@ -103,8 +103,8 @@ async def main():
 		body = f'art_source/body/body.png'
 		eyes = f'art_source/eyes/Eyes_{image_code[2]}.png'
 		feet = f'art_source/legs/feet_{image_code[3]}.png'
-		mouth = f'art_source/mouth/Mouth-{image_code[4]}.png'
-		stem = f'art_source/stem/stem-{image_code[5]}.png'
+		mouth = f'art_source/mouth/Mouth_{image_code[4]}.png'
+		stem = f'art_source/stem/stem_{image_code[5]}.png'
 
 		# generate image name: 1_1_1_1_1_1.png
 		output_filename = f'{args.art_generated_path}' + '/' +order[0].replace(',', '_') + '.png'
