@@ -86,18 +86,25 @@ async def main():
 	for order in orders:
 		tomato_process = TomatoProcess(client, args.network, key_pair)
 
-		numbers_list = [int(x)+1 for x in order[0].split(',')]
+		mosaic_supply = 1
+		image_code = [1, 1, 1, 1, 1, 1]
 
-		# message format example: 1,1,1,1,1,1
+		if len(order[0].split(',')) == 6:
+			image_code = [int(x)+1 for x in order[0].split(',')]
+		elif len(order[0].split(',')) == 7:
+			image_code = [int(x)+1 for x in order[0].split(',')[:6]]
+			mosaic_supply = int(order[0].split(',')[6])
+
+		# message format example: 1,1,1,1,1,1,10
 		# image name format example: Arm Left_1.png (1-9)
 
-		arm_left = f'art_source/arm-left/Arm Left_{numbers_list[0]}.png'
-		arm_right = f'art_source/arm-right/Arm Right_{numbers_list[1]}.png'
+		arm_left = f'art_source/arm-left/Arm Left_{image_code[0]}.png'
+		arm_right = f'art_source/arm-right/Arm Right_{image_code[1]}.png'
 		body = f'art_source/body/body.png'
-		eyes = f'art_source/eyes/Eyes_{numbers_list[2]}.png'
-		feet = f'art_source/legs/feet_{numbers_list[3]}.png'
-		mouth = f'art_source/mouth/Mouth-{numbers_list[4]}.png'
-		stem = f'art_source/stem/stem-{numbers_list[5]}.png'
+		eyes = f'art_source/eyes/Eyes_{image_code[2]}.png'
+		feet = f'art_source/legs/feet_{image_code[3]}.png'
+		mouth = f'art_source/mouth/Mouth-{image_code[4]}.png'
+		stem = f'art_source/stem/stem-{image_code[5]}.png'
 
 		# generate image name: 1_1_1_1_1_1.png
 		output_filename = f'{args.art_generated_path}' + '/' +order[0].replace(',', '_') + '.png'
@@ -115,7 +122,7 @@ async def main():
 		image_size = os.path.getsize(output_filename)
 
 		# create mosaic
-		create_mosaic_hash, mosaic_id = await tomato_process.create_mosaic(network_time, 1, args.dry_run)
+		create_mosaic_hash, mosaic_id = await tomato_process.create_mosaic(network_time, mosaic_supply, args.dry_run)
 
 		# upload image to chain
 		image_transaction_hash = await tomato_process.process_upload_to_chain(network_time, output_filename, args.dry_run)
@@ -127,6 +134,7 @@ async def main():
 			"paid": order[3],
 			"mosaic_hash": create_mosaic_hash,
 			"mosaic_id": mosaic_id,
+			"mosaic_supply": mosaic_supply,
 			"image_hash": image_transaction_hash,
 			"image_size": image_size,
 			"image_container_hash": "",

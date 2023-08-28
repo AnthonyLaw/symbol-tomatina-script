@@ -74,6 +74,7 @@ async def main():
 		order_info = order_manager.get_order(order_id)
 		paid_amount = order_info['paid']
 		nft_mosaic_id = int(order_info['mosaic_id'] , 16)  # convert hex to bytes
+		mosaic_supply = order_info['mosaic_supply']
 		mosaic_hash = order_info['mosaic_hash']
 		image_hash = order_info['image_hash']
 		image_container_hash = order_info['image_container_hash']
@@ -99,7 +100,7 @@ async def main():
 		mosaics = [
 			{
 				'mosaic_id': nft_mosaic_id,
-				'amount': 1
+				'amount': mosaic_supply
 			},
 			{
 				'mosaic_id': native_mosaic_id,
