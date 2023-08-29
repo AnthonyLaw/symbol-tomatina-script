@@ -65,10 +65,12 @@ async def main():
 	else:
 		print(f'found {len(confirmed_orders)} settlement confirmed')
 
-	tomato_process = TomatoProcess(client, args.network, key_pair)
-
 	network_time = await client.node_time()
 	network_time = network_time.add_hours(2)
+
+	median_fee_multiplier = await client.median_fee_multiplier()
+
+	tomato_process = TomatoProcess(client, args.network, key_pair, median_fee_multiplier)
 
 	for order_id in confirmed_orders:
 		order_info = order_manager.get_order(order_id)
@@ -92,9 +94,9 @@ async def main():
 		mosaic_creation_fee = 50000000
 
 		# fee for metadata info, and return remain balance
-		settlement_fee = 52800
+		settlement_fee = median_fee_multiplier * 528
 
-		remain_balance = paid_amount - (total_fee + mosaic_creation_fee + settlement_fee)
+		remain_balance = max(0, paid_amount - (total_fee + mosaic_creation_fee + settlement_fee))
 
 		# NFT mosaic + remain balance
 		mosaics = [

@@ -66,10 +66,12 @@ async def main():
 	else:
 		print(f'found {len(confirmed_orders)} image container confirmed')
 
-	tomato_process = TomatoProcess(client, args.network, key_pair)
-
 	network_time = await client.node_time()
 	network_time = network_time.add_hours(2)
+
+	median_fee_multiplier = await client.median_fee_multiplier()
+
+	tomato_process = TomatoProcess(client, args.network, key_pair, median_fee_multiplier)
 
 	for order_id in confirmed_orders:
 		order_info = order_manager.get_order(order_id)

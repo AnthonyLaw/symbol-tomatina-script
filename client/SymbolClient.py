@@ -81,3 +81,8 @@ class SymbolClient(BasicClient):
 
 		formatted_currency_mosaic_id = self._network_properties['currencyMosaicId']
 		return int(formatted_currency_mosaic_id.replace('\'', ''), 16)
+
+	async def median_fee_multiplier(self):
+		"""Gets the median fee multiplier from the network."""
+
+		return await self.get('network/fees/transaction', 'medianFeeMultiplier')

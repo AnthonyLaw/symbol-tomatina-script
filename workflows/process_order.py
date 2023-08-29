@@ -81,11 +81,13 @@ async def main():
 	network_time =  await client.node_time()
 	network_time = network_time.add_hours(2)
 
+	median_fee_multiplier = await client.median_fee_multiplier()
+
+	tomato_process = TomatoProcess(client, args.network, key_pair, median_fee_multiplier)
+
 	order_manager = OrderManager(args.order_file)
 
 	for order in orders:
-		tomato_process = TomatoProcess(client, args.network, key_pair)
-
 		mosaic_supply = 1
 		image_code = [1, 1, 1, 1, 1, 1]
 

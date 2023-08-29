@@ -10,10 +10,11 @@ from PIL import Image
 import io
 
 class TomatoProcess:
-	def __init__(self, client, network, key_pair):
+	def __init__(self, client, network, key_pair, fee_multiplier):
 		self.client = client
 		self.key_pair = key_pair
 		self.network = network
+		self.fee_multiplier = fee_multiplier
 
 	@staticmethod
 	def _image_to_bytes(image_path):
@@ -60,7 +61,7 @@ class TomatoProcess:
 				'transactions': embedded_transactions
 		})
 
-		aggregate_transaction.fee = Amount(100 * aggregate_transaction.size)
+		aggregate_transaction.fee = Amount(self.fee_multiplier * aggregate_transaction.size)
 
 		signature = facade.sign_transaction(self.key_pair, aggregate_transaction)
 
@@ -114,7 +115,7 @@ class TomatoProcess:
 					'transactions': embedded_transactions,
 			})
 
-			aggregate_transaction.fee = Amount(100 * aggregate_transaction.size)
+			aggregate_transaction.fee = Amount(self.fee_multiplier * aggregate_transaction.size)
 
 			signature = facade.sign_transaction(self.key_pair, aggregate_transaction)
 
@@ -161,7 +162,7 @@ class TomatoProcess:
 				'transactions': embedded_transactions,
 		})
 
-		aggregate_transaction.fee = Amount(100 * aggregate_transaction.size)
+		aggregate_transaction.fee = Amount(self.fee_multiplier * aggregate_transaction.size)
 
 		signature = facade.sign_transaction(self.key_pair, aggregate_transaction)
 
@@ -210,7 +211,7 @@ class TomatoProcess:
 				'transactions': embedded_transactions
 		})
 
-		aggregate_transaction.fee = Amount(100 * aggregate_transaction.size)
+		aggregate_transaction.fee = Amount(self.fee_multiplier * aggregate_transaction.size)
 
 		signature = facade.sign_transaction(self.key_pair, aggregate_transaction)
 
