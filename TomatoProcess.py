@@ -76,7 +76,13 @@ class TomatoProcess:
 		if not is_dry_run:
 			await self.client.announce(json.loads(json_payload))
 
-		return str(transaction_hash), hex(mosaic_id)
+
+		# The generate_mosaic_id function returns a 64-bit integer,
+		# which when converted to hexadecimal,
+		# results in only 15 significant digits, as it does not automatically left pad to 16 digits.
+		# To get a 16 digit value with left padding, it is recommended to use a format string like f'0x{mosaic_id:016X}'.
+
+		return str(transaction_hash), f'0x{mosaic_id:016X}'
 
 	async def process_upload_to_chain(self, deadline, image_url, is_dry_run):
 		image_bytes = self._image_to_bytes(image_url)
